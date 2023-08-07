@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 4257151735
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: particle
+      Dependencies: {}
