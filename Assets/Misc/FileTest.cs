@@ -31,8 +31,8 @@ public class FileTest : MonoBehaviour
 
     void Run()
     {
-        string file = Application.dataPath + filePath;
-        string dir = Application.dataPath + dirPath;
+        string file = Application.dataPath + "/" + filePath;
+        string dir = Application.dataPath + "/" + dirPath;
 
         Debug.Log(Application.dataPath);
 
@@ -62,11 +62,34 @@ public class FileTest : MonoBehaviour
         // 1.1KB
         {
             Profiler.BeginSample("Exists FileInfo");
-            FileInfo fi = new FileInfo("file");
+            FileInfo fi = new FileInfo(file);
             bool exists = fi.Exists;
             Profiler.EndSample();
 
             Debug.Log(exists);
+        }
+
+        // 1.1KB
+        {
+            Profiler.BeginSample("Size FileInfo");
+            FileInfo fi = new FileInfo(file);
+            long size = fi.Length;
+            Profiler.EndSample();
+
+            Debug.Log($"file size: {size}");
+        }
+
+        // 3.9KB
+        {
+            Profiler.BeginSample("Size FileStream");
+            long size = 0;
+            using (var fs = File.OpenRead(file))
+            {
+                size = fs.Length;
+            }
+            Profiler.EndSample();
+
+            Debug.Log($"file size: {size}");
         }
 
         // 20.2KB
