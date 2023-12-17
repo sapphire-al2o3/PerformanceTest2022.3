@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Security.Cryptography;
 using UnityEngine.Profiling;
 using System.Text;
+using System;
 
 public class HashTest : MonoBehaviour
 {
@@ -16,6 +17,16 @@ public class HashTest : MonoBehaviour
         }
         return sb.ToString();
     }
+
+	string GetHashString(ReadOnlySpan<byte> hash)
+	{
+		var sb = new StringBuilder();
+		foreach (var h in hash)
+		{
+			sb.Append(h.ToString("x2"));
+		}
+		return sb.ToString();
+	}
 
     void Start()
     {
@@ -30,6 +41,34 @@ public class HashTest : MonoBehaviour
                 Profiler.EndSample();
 
                 Debug.Log(GetHashString(hash));
+            }
+        }
+
+        // 240B
+        {
+            using (var md5 = IncrementalHash.CreateHash(HashAlgorithmName.MD5))
+            {
+                Profiler.BeginSample("IncrementalHash");
+                md5.AppendData(data);
+                var hash = md5.GetHashAndReset();
+                Profiler.EndSample();
+
+                Debug.Log(GetHashString(hash));
+            }
+        }
+
+        // 240B
+        // 配列からSpanにコピーされているだけ？
+        {
+            using (var md5 = IncrementalHash.CreateHash(HashAlgorithmName.MD5))
+            {
+                Profiler.BeginSample("IncrementalHash2");
+                md5.AppendData(data);
+                Span<byte> hash = stackalloc byte[32];
+                md5.TryGetHashAndReset(hash, out var length);
+                Profiler.EndSample();
+
+                Debug.Log(GetHashString(hash.Slice(0, length)));
             }
         }
 
