@@ -20,7 +20,8 @@ public class ReflectionTest : MonoBehaviour
         return System.Activator.CreateInstance<T>();
     }
 
-    T TestCreateInstance2<T>() where T : new()
+	// new制約では結局Activator.CreateInstanceが呼び出される
+	T TestCreateInstance2<T>() where T : new()
     {
         return new T();
     }
@@ -35,7 +36,6 @@ public class ReflectionTest : MonoBehaviour
         return new TestClass();
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         List<string> l = new List<string>();
@@ -115,6 +115,7 @@ public class ReflectionTest : MonoBehaviour
             Profiler.EndSample();
         }
 
+		// 0byte
         {
             Profiler.BeginSample("generic default struct");
             for (int i = 0; i < 1000; i++)
@@ -123,11 +124,5 @@ public class ReflectionTest : MonoBehaviour
             }
             Profiler.EndSample();
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
