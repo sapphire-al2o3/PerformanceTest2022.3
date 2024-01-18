@@ -39,8 +39,6 @@ public class IteratorLeakTest : MonoBehaviour
         }
     }
 
-
-    // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(Test());
