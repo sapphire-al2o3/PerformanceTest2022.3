@@ -81,5 +81,30 @@ public class StreamTest : MonoBehaviour
                 Debug.Assert(f == 1.234f);
             }
         }
+
+        
+        using (var ms = new MemoryStream(buffer))
+        {
+            // 176byte
+            using (new ProfilerScope("UTF8 encoding"))
+            {
+                using (var br = new BinaryReader(ms, System.Text.Encoding.UTF8))
+                {
+                }
+            }
+        }
+
+        
+        using (var ms = new MemoryStream(buffer))
+        {
+            // 280byte
+            // UTF8Encodingが生成されてしまう
+            using (new ProfilerScope("default encoding"))
+            {
+                using (var br = new BinaryReader(ms))
+                {
+                }
+            }
+        }
     }
 }
