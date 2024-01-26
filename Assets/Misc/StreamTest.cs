@@ -54,6 +54,8 @@ public class StreamTest : MonoBehaviour
                 bw.Write(str);
             }
 
+            bw.Write("abc");
+
             Debug.Log(ms.Length);
 
             buffer = ms.GetBuffer();
@@ -79,6 +81,19 @@ public class StreamTest : MonoBehaviour
             {
                 float f = br.ReadSingle();
                 Debug.Assert(f == 1.234f);
+            }
+
+            // 0byte
+            // 空文字
+            using (new ProfilerScope("read string empty"))
+            {
+                string s = br.ReadString();
+            }
+
+            // 478byte
+            using (new ProfilerScope("read string"))
+            {
+                string s = br.ReadString();
             }
         }
 
