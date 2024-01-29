@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
-using UnityEditorInternal.Profiling;
 using UnityEditor.Profiling;
+using System.Text;
 
 public class PrintProfilerCpuUsage
 {
@@ -51,11 +51,11 @@ public class PrintProfilerCpuUsage
 
         //Debug.Log($"{frame} {selectedPath}");
 
-        using (var frameData = ProfilerDriver.GetHierarchyFrameDataView(frame, 0, HierarchyFrameDataView.ViewModes.MergeSamplesWithTheSameName, HierarchyFrameDataView.columnName, false))
+        using (var frameData = ProfilerDriver.GetHierarchyFrameDataView(frame, 0, HierarchyFrameDataView.ViewModes.MergeSamplesWithTheSameName, HierarchyFrameDataView.columnTotalPercent, false))
         {
             List<int> childrenCacheList = new List<int>();
             List<int> parentCacheList = new List<int>();
-            List<int> targetCacheList = new List<int>();
+            
 
             frameData.GetItemDescendantsThatHaveChildren(frameData.GetRootItemID(), parentCacheList);
             foreach (int parentId in parentCacheList)
@@ -67,13 +67,19 @@ public class PrintProfilerCpuUsage
 
                     if (frameData.GetItemPath(id) == selectedPath)
                     {
+                        List<int> targetCacheList = new List<int>();
                         frameData.GetItemChildren(id, targetCacheList);
+
+                        StringBuilder sb = new StringBuilder(); 
 
                         foreach (var targetId in targetCacheList)
                         {
                             var info = GetInfo(frameData, targetId);
-                            Debug.Log($"{info.name} {info.totalPercent}% {info.selfPercent}% {info.calls} {info.gcMemory}B {info.totalTime} {info.selfTime}");
+                            sb.AppendLine($"{info.name} {info.totalPercent}% {info.selfPercent}% {info.calls} {info.gcMemory}B {info.totalTime} {info.selfTime}");
                         }
+
+                        string text = sb.ToString();
+                        Debug.Log(text);
 
                         return;
                     }
