@@ -8,6 +8,30 @@ using UnityEditor.Profiling;
 
 public class PrintProfilerCpuUsage
 {
+
+    struct Info
+    {
+        public string name;
+        public float totalPercent;
+        public float selfPercent;
+        public int calls;
+        public int gcMemory;
+        public float totalTime;
+        public float selfTime;
+    }
+
+    static Info GetInfo(HierarchyFrameDataView frameData, int id)
+    {
+        Info info = new Info();
+        info.name = frameData.GetItemName(id);
+        info.totalPercent = frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnTotalPercent);
+        info.calls = (int)frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnCalls);
+        info.gcMemory = (int)frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnGcMemory);
+        info.totalTime = frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnTotalTime);
+        info.selfTime = frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnSelfTime);
+        return info;
+    }
+
     [MenuItem("Editor/Print Profiler CPU Usage")]
     static void Print()
     {
@@ -31,26 +55,29 @@ public class PrintProfilerCpuUsage
         {
             List<int> childrenCacheList = new List<int>();
             List<int> parentCacheList = new List<int>();
-            //Debug.Log(frameData.sampleCount);
+            List<int> targetCacheList = new List<int>();
+
             frameData.GetItemDescendantsThatHaveChildren(frameData.GetRootItemID(), parentCacheList);
             foreach (int parentId in parentCacheList)
             {
                 frameData.GetItemChildren(parentId, childrenCacheList);
+
                 foreach (int id in childrenCacheList)
                 {
+
                     if (frameData.GetItemPath(id) == selectedPath)
                     {
-                        float totalPercent = frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnTotalPercent);
-                        float selfPercent = frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnSelfPercent);
-                        float calls = frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnCalls);
-                        float gcMemory = frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnGcMemory);
-                        float totalTime = frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnTotalTime);
-                        float selfTime = frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnSelfTime);
-                        Debug.Log($"{frameData.GetItemName(id)} {totalPercent}% {selfPercent}% {calls} {gcMemory}B {totalTime} {selfTime}");
-                        break;
+                        frameData.GetItemChildren(id, targetCacheList);
+
+                        foreach (var targetId in targetCacheList)
+                        {
+                            var info = GetInfo(frameData, targetId);
+                            Debug.Log($"{info.name} {info.totalPercent}% {info.selfPercent}% {info.calls} {info.gcMemory}B {info.totalTime} {info.selfTime}");
+                        }
+
+                        return;
                     }
                 }
-                //Debug.Log(frameData.GetItemName(parentId));
             }
         }
     }
