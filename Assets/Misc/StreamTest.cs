@@ -101,7 +101,7 @@ public class StreamTest : MonoBehaviour
         using (var ms = new MemoryStream(buffer))
         {
             // 176byte
-            using (new ProfilerScope("UTF8 encoding"))
+            using (new ProfilerScope("BinaryReader UTF8 encoding"))
             {
                 using (var br = new BinaryReader(ms, System.Text.Encoding.UTF8))
                 {
@@ -114,9 +114,19 @@ public class StreamTest : MonoBehaviour
         {
             // 280byte
             // UTF8Encodingが生成されてしまう
-            using (new ProfilerScope("default encoding"))
+            using (new ProfilerScope("BinaryReader default encoding"))
             {
                 using (var br = new BinaryReader(ms))
+                {
+                }
+            }
+        }
+
+        {
+            // 80B
+            using (new ProfilerScope("MemoryStream"))
+            {
+                using (var ms = new MemoryStream(buffer))
                 {
                 }
             }
