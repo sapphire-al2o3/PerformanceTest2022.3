@@ -8,7 +8,6 @@ using System.Text;
 
 public class PrintProfilerCpuUsage
 {
-
     struct Info
     {
         public string name;
@@ -36,26 +35,23 @@ public class PrintProfilerCpuUsage
     static void Print()
     {
         var profiler = EditorWindow.GetWindow<ProfilerWindow>();
-
-        string selectedPath = ProfilerDriver.selectedPropertyPath;
-        int frame = (int)profiler.selectedFrameIndex;
-
-        var controller = profiler.GetFrameTimeViewSampleSelectionController(ProfilerWindow.cpuModuleIdentifier);
-        var selection = controller.selection;
-
-        if (selection != null)
+        if (profiler == null)
         {
-            //Debug.Log(selection.frameIndex);
-            //Debug.Log(selection.sampleDisplayName);
+            return;
         }
 
-        //Debug.Log($"{frame} {selectedPath}");
+        string selectedPath = ProfilerDriver.selectedPropertyPath;
+        if (string.IsNullOrEmpty(selectedPath))
+        {
+            return;
+        }
+
+        int frame = (int)profiler.selectedFrameIndex;
 
         using (var frameData = ProfilerDriver.GetHierarchyFrameDataView(frame, 0, HierarchyFrameDataView.ViewModes.MergeSamplesWithTheSameName, HierarchyFrameDataView.columnTotalPercent, false))
         {
             List<int> childrenCacheList = new List<int>();
             List<int> parentCacheList = new List<int>();
-            
 
             frameData.GetItemDescendantsThatHaveChildren(frameData.GetRootItemID(), parentCacheList);
             foreach (int parentId in parentCacheList)
