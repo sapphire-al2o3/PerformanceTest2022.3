@@ -122,6 +122,7 @@ public class StreamTest : MonoBehaviour
                 }
             }
 
+            // .NET Framworkベースの処理になっているようなのでReadByteよりも遅い
             using (new ProfilerScope("read bool"))
             {
                 for (int i = 0; i < 256; i++)
