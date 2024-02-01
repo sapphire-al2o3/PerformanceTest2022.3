@@ -58,6 +58,24 @@ public class StreamTest : MonoBehaviour
 
             Debug.Log(ms.Length);
 
+            using (new ProfilerScope("write byte"))
+            {
+                byte b = 255;
+                for (int i = 0; i < 256; i++)
+                {
+                    bw.Write(b);
+                }
+            }
+
+            using (new ProfilerScope("write bool"))
+            {
+                bool b = true;
+                for (int i = 0; i < 256; i++)
+                {
+                    bw.Write(b);
+                }
+            }
+
             buffer = ms.GetBuffer();
         }
 
@@ -94,6 +112,22 @@ public class StreamTest : MonoBehaviour
             using (new ProfilerScope("read string"))
             {
                 string s = br.ReadString();
+            }
+
+            using (new ProfilerScope("read byte"))
+            {
+                for (int i = 0; i < 256; i++)
+                {
+                    byte b = br.ReadByte();
+                }
+            }
+
+            using (new ProfilerScope("read bool"))
+            {
+                for (int i = 0; i < 256; i++)
+                {
+                    bool b = br.ReadBoolean();
+                }
             }
         }
 
