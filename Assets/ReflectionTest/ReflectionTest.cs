@@ -20,8 +20,8 @@ public class ReflectionTest : MonoBehaviour
         return System.Activator.CreateInstance<T>();
     }
 
-	// new制約では結局Activator.CreateInstanceが呼び出される
-	T TestCreateInstance2<T>() where T : new()
+    // new制約では結局Activator.CreateInstanceが呼び出される
+    T TestCreateInstance2<T>() where T : new()
     {
         return new T();
     }
@@ -34,6 +34,11 @@ public class ReflectionTest : MonoBehaviour
     TestClass TestCreateInstance4()
     {
         return new TestClass();
+    }
+
+    T[] TestCreateArray<T>(int n) where T : new()
+    {
+        return new T[n];
     }
 
     void Start()
@@ -86,7 +91,6 @@ public class ReflectionTest : MonoBehaviour
             Profiler.EndSample();
         }
 
-        // 0byte
         {
             Profiler.BeginSample("generic new class");
             for (int i = 0; i < 1000; i++)
@@ -115,12 +119,21 @@ public class ReflectionTest : MonoBehaviour
             Profiler.EndSample();
         }
 
-		// 0byte
+        // 0byte
         {
             Profiler.BeginSample("generic default struct");
             for (int i = 0; i < 1000; i++)
             {
                 var t = TestCreateInstance3<TestStruct>();
+            }
+            Profiler.EndSample();
+        }
+
+        {
+            Profiler.BeginSample("generic new array");
+            for (int i = 0; i < 1000; i++)
+            {
+                var t = TestCreateArray<TestClass>(1);
             }
             Profiler.EndSample();
         }
