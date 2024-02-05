@@ -327,6 +327,13 @@ public class DictionaryTest : MonoBehaviour
             Profiler.EndSample();
         }
 
+        // 2.2KB
+        {
+            Profiler.BeginSample("HashSet<string>(100)");
+            var hashSet = new HashSet<string>(100);
+            Profiler.EndSample();
+        }
+
         // 0B
         {
             var hashSet = new HashSet<int>(100);
