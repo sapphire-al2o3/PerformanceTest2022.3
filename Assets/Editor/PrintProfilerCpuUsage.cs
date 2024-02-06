@@ -76,7 +76,7 @@ public class PrintProfilerCpuUsage
 
                         string text = sb.ToString();
                         Debug.Log(text);
-
+                        EditorGUIUtility.systemCopyBuffer = text;
                         return;
                     }
                 }
