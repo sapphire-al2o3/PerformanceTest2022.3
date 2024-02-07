@@ -24,6 +24,7 @@ public class PrintProfilerCpuUsage
         Info info = new Info();
         info.name = frameData.GetItemName(id);
         info.totalPercent = frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnTotalPercent);
+        info.selfPercent = frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnSelfPercent);
         info.calls = (int)frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnCalls);
         info.gcMemory = (int)frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnGcMemory);
         info.totalTime = frameData.GetItemColumnDataAsFloat(id, HierarchyFrameDataView.columnTotalTime);
