@@ -32,8 +32,8 @@ public class PrintProfilerCpuUsage
         return info;
     }
 
-    [MenuItem("Editor/Print Profiler CPU Usage")]
-    static void Print()
+    [MenuItem("Editor/Print Profiler CPU Usage (Children)")]
+    static void PrintChildren()
     {
         var profiler = EditorWindow.GetWindow<ProfilerWindow>();
         if (profiler == null)
@@ -67,7 +67,7 @@ public class PrintProfilerCpuUsage
                         List<int> targetCacheList = new List<int>();
                         frameData.GetItemChildren(id, targetCacheList);
 
-                        StringBuilder sb = new StringBuilder(); 
+                        StringBuilder sb = new StringBuilder();
 
                         foreach (var targetId in targetCacheList)
                         {
@@ -76,6 +76,50 @@ public class PrintProfilerCpuUsage
                         }
 
                         string text = sb.ToString();
+                        Debug.Log(text);
+                        EditorGUIUtility.systemCopyBuffer = text;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    [MenuItem("Editor/Print Profiler CPU Usage")]
+    static void Print()
+    {
+        var profiler = EditorWindow.GetWindow<ProfilerWindow>();
+        if (profiler == null)
+        {
+            return;
+        }
+
+        string selectedPath = ProfilerDriver.selectedPropertyPath;
+        if (string.IsNullOrEmpty(selectedPath))
+        {
+            return;
+        }
+
+        int frame = (int)profiler.selectedFrameIndex;
+
+        using (var frameData = ProfilerDriver.GetHierarchyFrameDataView(frame, 0, HierarchyFrameDataView.ViewModes.MergeSamplesWithTheSameName, HierarchyFrameDataView.columnTotalPercent, false))
+        {
+            List<int> childrenCacheList = new List<int>();
+            List<int> parentCacheList = new List<int>();
+
+            frameData.GetItemDescendantsThatHaveChildren(frameData.GetRootItemID(), parentCacheList);
+            foreach (int parentId in parentCacheList)
+            {
+                frameData.GetItemChildren(parentId, childrenCacheList);
+
+                foreach (int id in childrenCacheList)
+                {
+
+                    if (frameData.GetItemPath(id) == selectedPath)
+                    {
+                        var info = GetInfo(frameData, id);
+                        string text = $"{info.name} {info.totalPercent}% {info.selfPercent}% {info.calls} {info.gcMemory}B {info.totalTime} {info.selfTime}");
+
                         Debug.Log(text);
                         EditorGUIUtility.systemCopyBuffer = text;
                         return;
