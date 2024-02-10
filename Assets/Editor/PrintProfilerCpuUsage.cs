@@ -118,7 +118,7 @@ public class PrintProfilerCpuUsage
                     if (frameData.GetItemPath(id) == selectedPath)
                     {
                         var info = GetInfo(frameData, id);
-                        string text = $"{info.name} {info.totalPercent}% {info.selfPercent}% {info.calls} {info.gcMemory}B {info.totalTime} {info.selfTime}");
+                        string text = $"{info.name} {info.totalPercent}% {info.selfPercent}% {info.calls} {info.gcMemory}B {info.totalTime} {info.selfTime}";
 
                         Debug.Log(text);
                         EditorGUIUtility.systemCopyBuffer = text;
