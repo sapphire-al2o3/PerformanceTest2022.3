@@ -359,6 +359,7 @@ public class DictionaryTest : MonoBehaviour
             Profiler.EndSample();
         }
 
+        // 96B
         {
             Profiler.BeginSample("ReadOnlyDictionary 2");
             var rodic = new System.Collections.ObjectModel.ReadOnlyDictionary<int, int>(dic);
@@ -417,7 +418,7 @@ public class DictionaryTest : MonoBehaviour
         }
 
         // おそらくKeyValuePairがボックス化される
-        // 3.2KB
+        // 3.3KB
         {
             Profiler.BeginSample("IDictionary foreach");
             IDictionary idic = dic4;
@@ -474,14 +475,17 @@ public class DictionaryTest : MonoBehaviour
         }
 
         {
+            // 276.4KB
             Profiler.BeginSample("Dictionary<string, int>.ctor");
             Dictionary<string, int> d = new Dictionary<string, int>(10000);
             Profiler.EndSample();
+
             for (int i = 0; i < 1000; i++)
             {
                 d.Add(i.ToString(), i);
             }
 
+            // 0B
             Profiler.BeginSample("Dictionary<string, int>.get");
             for (int i = 0; i < 10000; i++)
             {
@@ -493,14 +497,17 @@ public class DictionaryTest : MonoBehaviour
         }
 
         {
+            // 276.4KB
             Profiler.BeginSample("Dictionary<object, int>.ctor");
             Dictionary<object, int> d = new Dictionary<object, int>(10000);
             Profiler.EndSample();
+
             for (int i = 0; i < 1000; i++)
             {
                 d.Add(i.ToString(), i);
             }
 
+            // 0B
             Profiler.BeginSample("Dictionary<object, int>.get");
             for (int i = 0; i < 10000; i++)
             {
