@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 using System.IO;
 using System.Linq;
+using Unity.IO.LowLevel.Unsafe;
 
 public class FileTest : MonoBehaviour
 {
@@ -138,6 +139,18 @@ public class FileTest : MonoBehaviour
             {
                 Debug.Log(e);
             }
+        }
+
+        unsafe
+        {
+            Profiler.BeginSample("AsyncReadManager.GetFileInfo");
+            FileInfoResult fileInfo;
+            var handle = AsyncReadManager.GetFileInfo(file, &fileInfo);
+            Profiler.EndSample();
+
+            Debug.Log(handle.Status);
+            Debug.Log(fileInfo.FileState);
+            Debug.Log(fileInfo.FileSize);
         }
     }
 }
