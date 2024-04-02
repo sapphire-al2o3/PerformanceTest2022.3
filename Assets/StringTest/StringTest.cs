@@ -792,7 +792,7 @@ public class StringTest : MonoBehaviour
             Profiler.EndSample();
         }
 
-        // 100Byte
+        // 36byte(JIT 64byte)
         {
             string text = "abcdefg";
             byte[] bytes = System.Text.Encoding.Unicode.GetBytes(text);
