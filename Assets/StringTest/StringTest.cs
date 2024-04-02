@@ -791,6 +791,16 @@ public class StringTest : MonoBehaviour
             }
             Profiler.EndSample();
         }
+
+        // 100Byte
+        {
+            string text = "abcdefg";
+            byte[] bytes = System.Text.Encoding.Unicode.GetBytes(text);
+
+            Profiler.BeginSample("Unicode.GetString");
+            string ret = System.Text.Encoding.Unicode.GetString(bytes);
+            Profiler.EndSample();
+        }
     }
 }
 
