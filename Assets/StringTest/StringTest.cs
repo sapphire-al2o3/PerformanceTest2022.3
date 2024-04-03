@@ -801,6 +801,15 @@ public class StringTest : MonoBehaviour
             string ret = System.Text.Encoding.Unicode.GetString(bytes);
             Profiler.EndSample();
         }
+
+        // 36byte
+        {
+            char[] text = { 'a', 'b', 'c', 'd', 'e', 'f', 'g' };
+
+            Profiler.BeginSample("new string(char[])");
+            string ret = new string(text);
+            Profiler.EndSample();
+        }
     }
 }
 
