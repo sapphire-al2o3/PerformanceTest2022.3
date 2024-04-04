@@ -72,7 +72,7 @@ public class PrintProfilerCpuUsage
                         foreach (var targetId in targetCacheList)
                         {
                             var info = GetInfo(frameData, targetId);
-                            sb.AppendLine($"{info.name} {info.totalPercent}% {info.selfPercent}% {info.calls} {info.gcMemory}B {info.totalTime} {info.selfTime}");
+                            sb.AppendLine($"{info.name} {info.totalPercent}% {info.selfPercent}% {info.calls} {info.gcMemory} {info.totalTime} {info.selfTime}");
                         }
 
                         string text = sb.ToString();
@@ -118,7 +118,7 @@ public class PrintProfilerCpuUsage
                     if (frameData.GetItemPath(id) == selectedPath)
                     {
                         var info = GetInfo(frameData, id);
-                        string text = $"{info.name} {info.totalPercent}% {info.selfPercent}% {info.calls} {info.gcMemory}B {info.totalTime} {info.selfTime}";
+                        string text = $"{info.name} {info.totalPercent}% {info.selfPercent}% {info.calls} {info.gcMemory} {info.totalTime} {info.selfTime}";
 
                         Debug.Log(text);
                         EditorGUIUtility.systemCopyBuffer = text;
@@ -126,6 +126,55 @@ public class PrintProfilerCpuUsage
                     }
                 }
             }
+        }
+    }
+
+    [MenuItem("Editor/Print Profiler CPU Usage (Filter)")]
+    static void PrintByFilter()
+    {
+        var profiler = EditorWindow.GetWindow<ProfilerWindow>();
+        if (profiler == null)
+        {
+            return;
+        }
+
+        var controller = profiler.GetFrameTimeViewSampleSelectionController(ProfilerWindow.cpuModuleIdentifier);
+        string searchName = controller.sampleNameSearchFilter;
+        Debug.Log(searchName);
+
+        string selectedPath = ProfilerDriver.selectedPropertyPath;
+        if (string.IsNullOrEmpty(selectedPath))
+        {
+            return;
+        }
+
+        int frame = (int)profiler.selectedFrameIndex;
+
+        using (var frameData = ProfilerDriver.GetHierarchyFrameDataView(frame, 0, HierarchyFrameDataView.ViewModes.MergeSamplesWithTheSameName, HierarchyFrameDataView.columnTotalPercent, false))
+        {
+            List<int> childrenCacheList = new List<int>();
+            List<int> parentCacheList = new List<int>();
+
+            StringBuilder sb = new StringBuilder();
+            frameData.GetItemDescendantsThatHaveChildren(frameData.GetRootItemID(), parentCacheList);
+            foreach (int parentId in parentCacheList)
+            {
+                frameData.GetItemChildren(parentId, childrenCacheList);
+
+                foreach (int id in childrenCacheList)
+                {
+
+                    if (frameData.GetItemName(id).Contains(searchName))
+                    {
+                        var info = GetInfo(frameData, id);
+                        sb.AppendLine($"{info.name} {info.totalPercent}% {info.selfPercent}% {info.calls} {info.gcMemory} {info.totalTime} {info.selfTime}");
+                    }
+                }
+            }
+
+            string text = sb.ToString();
+            Debug.Log(text);
+            EditorGUIUtility.systemCopyBuffer = text;
         }
     }
 }
