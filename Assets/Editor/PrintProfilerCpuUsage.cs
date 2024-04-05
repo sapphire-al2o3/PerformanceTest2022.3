@@ -142,12 +142,6 @@ public class PrintProfilerCpuUsage
         string searchName = controller.sampleNameSearchFilter;
         Debug.Log(searchName);
 
-        string selectedPath = ProfilerDriver.selectedPropertyPath;
-        if (string.IsNullOrEmpty(selectedPath))
-        {
-            return;
-        }
-
         int frame = (int)profiler.selectedFrameIndex;
 
         using (var frameData = ProfilerDriver.GetHierarchyFrameDataView(frame, 0, HierarchyFrameDataView.ViewModes.MergeSamplesWithTheSameName, HierarchyFrameDataView.columnTotalPercent, false))
