@@ -21,9 +21,11 @@ public class NativeArrayTest : MonoBehaviour
         {
             for (int i = 0; i < nativeNrray.Length; i++)
             {
-                int v = nativeNrray[i];
+                var v = nativeNrray[i];
             }
         }
+
+        nativeNrray.Dispose();
 
         var array = new byte[1000];
         using (new ProfilerScope("Array set"))
@@ -38,7 +40,7 @@ public class NativeArrayTest : MonoBehaviour
         {
             for (int i = 0; i < array.Length; i++)
             {
-                int v = array[i];
+                var v = array[i];
             }
         }
     }
