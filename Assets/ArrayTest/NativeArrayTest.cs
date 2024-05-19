@@ -9,6 +9,10 @@ public class NativeArrayTest : MonoBehaviour
     {
         var nativeNrray = new NativeArray<byte>(1000, Allocator.Temp);
 
+        // 初回呼び出しを計測に含めない
+        nativeNrray[0] = 0;
+        var t = nativeNrray[0];
+
         using (new ProfilerScope("NativeArray set"))
         {
             for (int i = 0; i < nativeNrray.Length; i++)
