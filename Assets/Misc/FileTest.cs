@@ -149,6 +149,7 @@ public class FileTest : MonoBehaviour
             Profiler.EndSample();
 
             Debug.Log(handle.Status);
+            handle.Dispose();
             Debug.Log(fileInfo.FileState);
             Debug.Log(fileInfo.FileSize);
         }
