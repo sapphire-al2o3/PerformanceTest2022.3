@@ -3,33 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Collections;
 
+
 public class NativeArrayTest : MonoBehaviour
 {
     void Start()
     {
-        var nativeNrray = new NativeArray<byte>(1000, Allocator.Temp);
+        var nativeArray = new NativeArray<byte>(1000, Allocator.Temp);
 
         // 初回呼び出しを計測に含めない
-        nativeNrray[0] = 0;
-        var t = nativeNrray[0];
+        nativeArray[0] = 0;
+        var t = nativeArray[0];
 
         using (new ProfilerScope("NativeArray set"))
         {
-            for (int i = 0; i < nativeNrray.Length; i++)
+            for (int i = 0; i < nativeArray.Length; i++)
             {
-                nativeNrray[i] = 0;
+                nativeArray[i] = 0;
             }
         }
 
         using (new ProfilerScope("NativeArray get"))
         {
-            for (int i = 0; i < nativeNrray.Length; i++)
+            for (int i = 0; i < nativeArray.Length; i++)
             {
-                var v = nativeNrray[i];
+                var v = nativeArray[i];
             }
         }
 
-        nativeNrray.Dispose();
+        nativeArray.Dispose();
 
         var array = new byte[1000];
         using (new ProfilerScope("Array set"))
