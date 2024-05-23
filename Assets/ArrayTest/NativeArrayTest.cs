@@ -59,6 +59,44 @@ public class NativeArrayTest : MonoBehaviour
 
         nativeArray.Dispose();
 
+        nativeArray = new NativeArray<byte>(Max, Allocator.Persistent);
+
+        using (new ProfilerScope("NativeArray(Persistent) set"))
+        {
+            for (int i = 0; i < nativeArray.Length; i++)
+            {
+                nativeArray[i] = 0;
+            }
+        }
+
+        using (new ProfilerScope("NativeArray(Persistent) get"))
+        {
+            for (int i = 0; i < nativeArray.Length; i++)
+            {
+                var v = nativeArray[i];
+            }
+        }
+
+        using (new ProfilerScope("NativeArray(Persistent) span get"))
+        {
+            var span = nativeArray.AsReadOnlySpan();
+            for (int i = 0; i < span.Length; i++)
+            {
+                var v = span[i];
+            }
+        }
+
+        using (new ProfilerScope("NativeArray(Persistent) span set"))
+        {
+            var span = nativeArray.AsSpan();
+            for (int i = 0; i < span.Length; i++)
+            {
+                span[i] = 0;
+            }
+        }
+
+        nativeArray.Dispose();
+
         var array = new byte[Max];
         using (new ProfilerScope("Array set"))
         {
