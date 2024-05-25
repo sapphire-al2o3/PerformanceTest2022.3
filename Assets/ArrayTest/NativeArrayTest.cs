@@ -21,6 +21,18 @@ public class NativeArrayTest : MonoBehaviour
             t = rs[0];
             var s = nativeArray.AsSpan();
             s[0] = 0;
+
+            unsafe
+            {
+                using (new ProfilerScope("GetUnsafePtr"))
+                {
+                    byte* ptr = (byte*)NativeArrayUnsafeUtility.GetUnsafePtr(nativeArray);
+                }
+                using (new ProfilerScope("GetUnsafeReadOnlyPtr"))
+                {
+                    byte* ptr = (byte*)NativeArrayUnsafeUtility.GetUnsafeReadOnlyPtr(nativeArray);
+                }
+            }
         }
 
         using (new ProfilerScope("NativeArray set"))
@@ -64,8 +76,7 @@ public class NativeArrayTest : MonoBehaviour
                 byte* ptr = (byte*)NativeArrayUnsafeUtility.GetUnsafePtr(nativeArray);
                 for (int i = 0; i < nativeArray.Length; i++)
                 {
-                    *ptr = 0;
-                    ptr++;
+                    *ptr++ = 0;
                 }
             }
 
@@ -74,8 +85,7 @@ public class NativeArrayTest : MonoBehaviour
                 byte* ptr = (byte*)NativeArrayUnsafeUtility.GetUnsafeReadOnlyPtr(nativeArray);
                 for (int i = 0; i < nativeArray.Length; i++)
                 {
-                    var v = *ptr;
-                    ptr++;
+                    var v = *ptr++;
                 }
             }
         }
