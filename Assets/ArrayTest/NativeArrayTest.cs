@@ -146,5 +146,23 @@ public class NativeArrayTest : MonoBehaviour
                 var v = array[i];
             }
         }
+
+        using (new ProfilerScope("Array span set"))
+        {
+            var span = new System.Span<byte>(array);
+            for (int i = 0; i < span.Length; i++)
+            {
+                span[i] = 0;
+            }
+        }
+
+        using (new ProfilerScope("Array span get"))
+        {
+            var span = new System.Span<byte>(array);
+            for (int i = 0; i < span.Length; i++)
+            {
+                var v = span[i];
+            }
+        }
     }
 }
