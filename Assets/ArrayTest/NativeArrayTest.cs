@@ -164,5 +164,32 @@ public class NativeArrayTest : MonoBehaviour
                 var v = span[i];
             }
         }
+
+        unsafe
+        {
+            using (new ProfilerScope("Array ptr set"))
+            {
+                fixed (byte* a = array)
+                {
+                    byte* ptr = a;
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        *ptr++ = 0;
+                    }
+                }
+            }
+
+            using (new ProfilerScope("Array ptr get"))
+            {
+                fixed (byte* a = array)
+                {
+                    byte* ptr = a;
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        var v = *ptr++;
+                    }
+                }
+            }
+        }
     }
 }
