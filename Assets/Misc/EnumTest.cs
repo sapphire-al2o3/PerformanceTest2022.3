@@ -39,5 +39,14 @@ public class EnumTest : MonoBehaviour
 
             Debug.Log(flag);
         }
+
+        // 280byte
+        using (new ProfilerScope("Enum.GetValues"))
+        {
+            foreach (int t in System.Enum.GetValues(typeof(Flags)))
+            {
+            }
+        }
+        
     }
 }
