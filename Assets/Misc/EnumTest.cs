@@ -47,6 +47,12 @@ public class EnumTest : MonoBehaviour
             {
             }
         }
+
+        // 56byte
+        using (new ProfilerScope("Enum.GetNames"))
+        {
+            var names = System.Enum.GetNames(typeof(Flags));
+        }
         
     }
 }
