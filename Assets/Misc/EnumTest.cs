@@ -46,6 +46,17 @@ public class EnumTest : MonoBehaviour
             var values = System.Enum.GetValues(typeof(Flags));
         }
 
+        // 92byte
+        {
+            var values = System.Enum.GetValues(typeof(Flags));
+            using (new ProfilerScope("foreach"))
+            {
+                foreach (var t in values)
+                {
+                }
+            }
+        }
+
         // 56byte
         using (new ProfilerScope("Enum.GetNames"))
         {
