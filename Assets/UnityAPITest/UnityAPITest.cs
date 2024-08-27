@@ -243,7 +243,7 @@ public class UnityAPITest : MonoBehaviour
 
         Debug.Assert(cc != null);
 
-        // 416byte
+        // 400byte
         {
             var animator = GetComponent<Animator>();
             int hash = 0;
@@ -255,8 +255,9 @@ public class UnityAPITest : MonoBehaviour
             Profiler.EndSample();
         }
 
-        // GetParameterはparametersを内部で呼び出している
-        // 2.9KB
+        // GetParameterはparametersを内部で呼び出している(Unity2020)
+        // Unity2022ではparametersを呼び出さなくなった
+        // 288KB
         {
             var animator = GetComponent<Animator>();
             Profiler.BeginSample("Animator.GetParameter");
